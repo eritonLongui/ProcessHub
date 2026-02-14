@@ -1,0 +1,6 @@
+@ProcessHub_HostAddress = http://localhost:5008
+
+GET {{ProcessHub_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
