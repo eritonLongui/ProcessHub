@@ -1,13 +1,13 @@
 # =========================
 # Build Results
 # =========================
-[Dd]ebug/
-[Rr]elease/
+Debug/
+Release/
 x64/
 x86/
 bld/
-[Bb]in/
-[Oo]bj/
+Bin/
+Obj/
 out/
 
 # =========================
