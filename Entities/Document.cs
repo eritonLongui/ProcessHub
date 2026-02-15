@@ -6,9 +6,9 @@ namespace ProcessHub.Entities
 
         public string FilePath { get; private set; }
 
-        // ProcessId
+        public Guid ProcessId { get; private set; }
 
-        // Process
+        public Process Process { get; private set; }
 
         protected Document() { }
 

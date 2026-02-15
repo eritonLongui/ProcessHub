@@ -2,19 +2,17 @@ namespace ProcessHub.Entities
 {
     public class ProcessHistory : BaseEntity
     {
+        public Guid ProcessId { get; private set; }
+        public Process Process { get; private set; }
+
         public string OldStatus { get; private set; }
 
         public string NewStatus { get; private set; }
 
-        // ChangedByUserId
-
-        // ChangedByUser
-
-        // ChangedAt
-
-        // ProcessId
-
-        // Process
+        public Guid ChangedByUserId { get; private set; }
+        public User ChangedByUser { get; private set; }
+        
+        public DateTime ChangedAt { get; private set; }
 
         protected ProcessHistory() { }
 
