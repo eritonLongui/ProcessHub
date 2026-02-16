@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProcessHub")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07836a1c59d2834f55f7f2248bd1d1d1c91bd63c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf0d93144d2a75ff3749b3436632c04250a559ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProcessHub")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProcessHub")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
