@@ -9,11 +9,11 @@ namespace ProcessHub.Data
         {
         }
 
-        public DbSet<User> Users => set<User>();
-        public DbSet<Client> Clients => set<Client>();
-        public DbSet<Process> Processes => set<Process>();
-        public DbSet<Document> Documents => set<Document>();
-        public DbSet<ProcessHistory> ProcessHistories => set<ProcessHistory>();
+        public DbSet<User> Users => Set<User>();
+        public DbSet<Client> Clients => Set<Client>();
+        public DbSet<Process> Processes => Set<Process>();
+        public DbSet<Document> Documents => Set<Document>();
+        public DbSet<ProcessHistory> ProcessHistories => Set<ProcessHistory>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

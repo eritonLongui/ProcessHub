@@ -6,9 +6,7 @@ Release/
 x64/
 x86/
 bld/
-Bin/
 bin/
-Obj/
 obj/
 out/
 
