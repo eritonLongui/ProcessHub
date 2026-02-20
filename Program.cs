@@ -2,6 +2,8 @@ using ProcessHub.Data;
 using Microsoft.EntityFrameworkCore;
 using ProcessHub.Repositories;
 using ProcessHub.Repositories.Interfaces;
+using ProcessHub.Services;
+using ProcessHub.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(IClientRepository), typeof(ClientRepository));
+builder.Services.AddScoped(typeof(IProcessRepository), typeof(ProcessRepository));
+
+builder.Services.AddScoped<IProcessService, ProcessService>();
 
 var app = builder.Build();
 
