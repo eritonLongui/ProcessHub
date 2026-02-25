@@ -22,12 +22,16 @@ namespace ProcessHub.Services
             _context = context;
         }
 
-        public async Task<Process> CreateAsync(string title, string description, ProcessStatus status, Guid clientId)
+        public async Task<Process> CreateAsync(string title, string description, Guid clientId)
         {
+            // estou repetindo muito esse trecho de código, devo alterá-lo mais para frente
+
             var client = await _clientRepository.GetByIdAsync(clientId);
 
             if (client == null)
                 throw new Exception("Client not found.");
+
+            // ----------------------------------------------------------------------------
 
             var process = new Process(title, description, clientId);
 
@@ -38,7 +42,7 @@ namespace ProcessHub.Services
             return process;
         }
 
-        public async Task UpdateAsync(Guid id, string title, string description, ProcessStatus status)
+        public async Task UpdateAsync(Guid id, string title, string description)
         {
             var process = await _processRepository.GetByIdAsync(id);
 
@@ -88,6 +92,20 @@ namespace ProcessHub.Services
         public async Task<IEnumerable<Process>> GetByClientIdAsync(Guid clientId)
         {
             return await _processRepository.GetByClientIdAsync(clientId);
+        }
+
+        public async Task DeactivateAsync(Guid id)
+        {
+            var process = await _processRepository.GetByIdAsync(id);
+
+            if (process == null)
+                throw new Exception("Process not found.");
+
+            process.Deactivate();
+
+            _processRepository.Update(process);
+
+            await _context.SaveChangesAsync();
         }
     }
 }
