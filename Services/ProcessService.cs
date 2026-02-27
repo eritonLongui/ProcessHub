@@ -70,14 +70,14 @@ namespace ProcessHub.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task ChangeStatusAsync(Guid processId, ProcessStatus newStatus)
+        public async Task ChangeStatusAsync(Guid processId, ProcessStatus newStatus, Guid UserId)
         {
             var process = await _processRepository.GetByIdAsync(processId);
 
             if (process == null)
                 throw new Exception("Process not found.");
 
-            process.ChangeStatus(newStatus);
+            process.ChangeStatus(newStatus, UserId);
 
             _processRepository.Update(process);
 

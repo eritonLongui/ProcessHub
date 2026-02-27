@@ -12,11 +12,11 @@ namespace ProcessHub.Entities
 
         protected Document() { }
 
-        public Document(string fileName, string filePath)
+        public Document(string fileName, string filePath, Guid processId)
         {
             FileName = fileName;
             FilePath = filePath;
-
+            ProcessId = processId;
         }
 
         public void Update(string fileName, string filePath)

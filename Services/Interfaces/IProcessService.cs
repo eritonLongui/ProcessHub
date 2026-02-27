@@ -11,7 +11,7 @@ namespace ProcessHub.Services.Interfaces
     
         Task AssignUserAsync(Guid processId, Guid userId);
 
-        Task ChangeStatusAsync(Guid processId, ProcessStatus newStatus);
+        Task ChangeStatusAsync(Guid processId, ProcessStatus newStatus, Guid UserId);
 
         Task<Process?> GetByIdAsync(Guid id);
 

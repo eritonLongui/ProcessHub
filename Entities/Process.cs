@@ -23,7 +23,11 @@ namespace ProcessHub.Entities
 
         public ICollection<ProcessHistory> History { get; private set; }
 
-        protected Process() { }
+        protected Process()
+        {
+            Documents = new List<Document>();
+            History = new List<ProcessHistory>();
+        }
 
         public Process(string title, string description, Guid clientId)
         {
@@ -31,6 +35,9 @@ namespace ProcessHub.Entities
             Description = description;
             ClientId = clientId;
             Status = ProcessStatus.Open;
+
+            Documents = new List<Document>();
+            History = new List<ProcessHistory>();
         }
 
         public void Update(string title, string description)
@@ -46,14 +53,22 @@ namespace ProcessHub.Entities
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void ChangeStatus(ProcessStatus newStatus)
+        public void ChangeStatus(ProcessStatus newStatus, Guid changedByUserId)
         {
             if (Status == newStatus)
                 return;
             
+            var oldStatus = Status;
+
             Status = newStatus;
             UpdatedAt = DateTime.UtcNow;
+
+            var history = new ProcessHistory( Id, oldStatus, newStatus, changedByUserId);
+            
+            History.Add(history);
         }
+
+        // adcionar documentos
 
         public bool CanBeCompleted()
         {

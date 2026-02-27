@@ -20,6 +20,9 @@ builder.Services.AddScoped(typeof(IClientRepository), typeof(ClientRepository));
 builder.Services.AddScoped(typeof(IProcessRepository), typeof(ProcessRepository));
 
 builder.Services.AddScoped<IProcessService, ProcessService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 
 var app = builder.Build();
 

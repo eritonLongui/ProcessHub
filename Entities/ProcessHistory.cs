@@ -1,3 +1,5 @@
+using ProcessHub.Enums;
+
 namespace ProcessHub.Entities
 {
     public class ProcessHistory : BaseEntity
@@ -5,9 +7,9 @@ namespace ProcessHub.Entities
         public Guid ProcessId { get; private set; }
         public Process Process { get; private set; }
 
-        public string OldStatus { get; private set; }
+        public ProcessStatus OldStatus { get; private set; }
 
-        public string NewStatus { get; private set; }
+        public ProcessStatus NewStatus { get; private set; }
 
         public Guid ChangedByUserId { get; private set; }
         public User ChangedByUser { get; private set; }
@@ -16,17 +18,17 @@ namespace ProcessHub.Entities
 
         protected ProcessHistory() { }
 
-        public ProcessHistory(string oldStatus, string newStatus)
+        public ProcessHistory(
+            Guid processId,
+            ProcessStatus oldStatus,
+            ProcessStatus newStatus,
+            Guid changedByUserId)
         {
+            ProcessId = processId;
             OldStatus = oldStatus;
             NewStatus = newStatus;
-        }
-
-        public void Update(string oldStatus, string newStatus)
-        {
-            OldStatus = oldStatus;
-            NewStatus = newStatus;
-            UpdatedAt = DateTime.UtcNow;
+            ChangedByUserId = changedByUserId;
+            ChangedAt = DateTime.UtcNow;
         }
     }
 }
