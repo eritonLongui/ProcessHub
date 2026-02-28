@@ -1,11 +1,10 @@
-using ProcessHub.Entities;
 using ProcessHub.Enums;
 
 namespace ProcessHub.Services.Interfaces
 {
     public interface IProcessService
     {
-        Task<Process> CreateAsync(string title, string description, Guid clientId);
+        Task<ProcessResponseDto> CreateAsync(string title, string description, Guid clientId);
 
         Task UpdateAsync(Guid id, string title, string description);
     
@@ -13,9 +12,9 @@ namespace ProcessHub.Services.Interfaces
 
         Task ChangeStatusAsync(Guid processId, ProcessStatus newStatus, Guid UserId);
 
-        Task<Process?> GetByIdAsync(Guid id);
+        Task<ProcessResponseDto?> GetByIdAsync(Guid id);
 
-        Task<IEnumerable<Process>> GetByClientIdAsync(Guid clientId);
+        Task<IEnumerable<ProcessResponseDto>> GetByClientIdAsync(Guid clientId);
 
         Task DeactivateAsync(Guid id);
     }

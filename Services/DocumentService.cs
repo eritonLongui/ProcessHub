@@ -21,7 +21,7 @@ namespace ProcessHub.Services
             _context = context;
         }
 
-        public async Task<Document> CreateAsync(string fileName, string filePath, Guid processId)
+        public async Task<DocumentResponseDto> CreateAsync(string fileName, string filePath, Guid processId)
         {
             var process = await _processRepository.GetByIdAsync(processId);
 
@@ -33,17 +33,34 @@ namespace ProcessHub.Services
             await _documentRepository.AddAsync(document);
             await _context.SaveChangesAsync();
 
-            return document;
+            return MapToDto(document);
         }
 
-        public async Task<Document?> GetByIdAsync(Guid id)
+        public async Task<DocumentResponseDto?> GetByIdAsync(Guid id)
         {
-            return await _documentRepository.GetByIdAsync(id);
+            var document = await _documentRepository.GetByIdAsync(id);
+
+            if (document == null)
+                throw new Exception("Document not found.");
+
+            return MapToDto(document);
         }
 
-        public async Task<IEnumerable<Document>> GetByProcessIdAsync(Guid processId)
+        public async Task<IEnumerable<DocumentResponseDto>> GetByProcessIdAsync(Guid processId)
         {
-            return await _documentRepository.FindAsync(d => d.ProcessId == processId);
+            var documents = await _documentRepository.FindAsync(d => d.ProcessId == processId);
+            
+            return documents.Select(MapToDto);
+        }
+
+        private static DocumentResponseDto MapToDto(Document document)
+        {
+            return new DocumentResponseDto(
+                document.Id,
+                document.FileName,
+                document.FilePath,
+                document.ProcessId
+            );
         }
 
         public async Task DeactivateAsync(Guid id)

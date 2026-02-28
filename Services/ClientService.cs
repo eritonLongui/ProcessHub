@@ -18,7 +18,7 @@ namespace ProcessHub.Services
             _context = context;
         }
 
-        public async Task<Client> CreateAsync(string name, string email, string documentNumber)
+        public async Task<ClientResponseDto> CreateAsync(string name, string email, string documentNumber)
         {
             if (await _clientRepository.ExistsByDocumentAsync(documentNumber))
                 throw new Exception("Client already exists.");
@@ -28,7 +28,7 @@ namespace ProcessHub.Services
             await _clientRepository.AddAsync(client);
             await _context.SaveChangesAsync();
 
-            return client;
+            return MapToDto(client);
         }
 
         public async Task UpdateAsync(Guid id, string name, string email)
@@ -44,14 +44,31 @@ namespace ProcessHub.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Client?> GetByIdAsync(Guid id)
+        public async Task<ClientResponseDto?> GetByIdAsync(Guid id)
         {
-            return await _clientRepository.GetByIdAsync(id);
+            var client = await _clientRepository.GetByIdAsync(id);
+
+            if (client == null)
+                return null;
+
+            return MapToDto(client);
         }
 
-        public async Task<IEnumerable<Client>> GetAllAsync()
+        public async Task<IEnumerable<ClientResponseDto>> GetAllAsync()
         {
-            return await _clientRepository.GetAllAsync();
+            var clients = await _clientRepository.GetAllAsync();
+
+            return clients.Select(MapToDto);
+        }
+
+        private static ClientResponseDto MapToDto(Client client)
+        {
+            return new ClientResponseDto(
+                client.Id,
+                client.Name,
+                client.Email,
+                client.DocumentNumber
+            );
         }
 
         public async Task DeactivateAsync(Guid id)

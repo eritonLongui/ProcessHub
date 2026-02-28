@@ -22,7 +22,7 @@ namespace ProcessHub.Services
             _context = context;
         }
 
-        public async Task<Process> CreateAsync(string title, string description, Guid clientId)
+        public async Task<ProcessResponseDto> CreateAsync(string title, string description, Guid clientId)
         {
             // estou repetindo muito esse trecho de código, devo alterá-lo mais para frente
 
@@ -36,10 +36,12 @@ namespace ProcessHub.Services
             var process = new Process(title, description, clientId);
 
             await _processRepository.AddAsync(process);
-
             await _context.SaveChangesAsync();
 
-            return process;
+            // carregar com include para retornar o cliente completo
+            var createdProcess = await _processRepository.GetWithDetailsAsync(process.Id);
+            
+            return MapToDto(createdProcess!);
         }
 
         public async Task UpdateAsync(Guid id, string title, string description)
@@ -84,14 +86,44 @@ namespace ProcessHub.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Process?> GetByIdAsync(Guid id)
+        public async Task<ProcessResponseDto?> GetByIdAsync(Guid id)
         {
-            return await _processRepository.GetWithDetailsAsync(id);
+            var process = await _processRepository.GetWithDetailsAsync(id);
+
+            if (process == null)
+                return null;
+
+            return MapToDto(process);
         }
 
-        public async Task<IEnumerable<Process>> GetByClientIdAsync(Guid clientId)
+        private static ProcessResponseDto MapToDto(Process process)
         {
-            return await _processRepository.GetByClientIdAsync(clientId);
+            return new ProcessResponseDto(
+                process.Id,
+                process.Title,
+                process.Description,
+                process.Status.ToString(),
+                new ClientSummaryDto(
+                    process.Client.Id,
+                    process.Client.Name,
+                    process.Client.DocumentNumber
+                )
+            );
+        }
+
+        public async Task<IEnumerable<ProcessResponseDto>> GetByClientIdAsync(Guid clientId)
+        {
+            var processes = await _processRepository.GetByClientIdAsync(clientId);
+            
+            var result = new List<ProcessResponseDto>();
+
+            foreach (var process in processes)
+            {
+                var detailed = await _processRepository.GetWithDetailsAsync(process.Id);
+                result.Add(MapToDto(detailed!));
+            }
+
+            return result;
         }
 
         public async Task DeactivateAsync(Guid id)

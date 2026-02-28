@@ -19,14 +19,14 @@ namespace ProcessHub.Services
             _context = context;
         }
 
-        public async Task<User> CreateAsync(string name, string email, string passwordHash, UserRole role)
+        public async Task<UserResponseDto> CreateAsync(string name, string email, string passwordHash, UserRole role)
         {
             var user = new User(name, email, passwordHash, role);
 
             await _userRepository.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            return user;
+            return MapToDto(user);
         }
 
         public async Task UpdateAsync(Guid id, string name, string email)
@@ -55,14 +55,30 @@ namespace ProcessHub.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User?> GetByIdAsync(Guid id)
+        public async Task<UserResponseDto?> GetByIdAsync(Guid id)
         {
-            return await _userRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+                throw new Exception("User not found.");
+
+            return MapToDto(user);
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<UserResponseDto>> GetAllAsync()
         {
-            return await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsync();
+
+            return users.Select(MapToDto);
+        }
+
+        private static UserResponseDto MapToDto(User user)
+        {
+            return new UserResponseDto(
+                user.Id,
+                user.Name,
+                user.Email
+            );
         }
 
         public async Task DeactivateAsync(Guid id)
