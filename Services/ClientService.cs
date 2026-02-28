@@ -2,6 +2,7 @@ using ProcessHub.Entities;
 using ProcessHub.Repositories.Interfaces;
 using ProcessHub.Services.Interfaces;
 using ProcessHub.Data;
+using ProcessHub.Exceptions;
 
 namespace ProcessHub.Services
 {
@@ -21,7 +22,7 @@ namespace ProcessHub.Services
         public async Task<ClientResponseDto> CreateAsync(string name, string email, string documentNumber)
         {
             if (await _clientRepository.ExistsByDocumentAsync(documentNumber))
-                throw new Exception("Client already exists.");
+                throw new NotFoundException("Client already exists.");
 
             var client = new Client(name, email, documentNumber);
 
@@ -36,7 +37,7 @@ namespace ProcessHub.Services
             var client = await _clientRepository.GetByIdAsync(id);
 
             if (client == null)
-                throw new Exception("Client not found.");
+                throw new NotFoundException("Client not found.");
 
             client.Update(name, email);
 
@@ -76,7 +77,7 @@ namespace ProcessHub.Services
             var client = await _clientRepository.GetByIdAsync(id);
 
             if (client == null)
-                throw new Exception("Client not found.");
+                throw new NotFoundException("Client not found.");
 
             client.Deactivate();
 

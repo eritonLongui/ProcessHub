@@ -3,6 +3,7 @@ using ProcessHub.Repositories.Interfaces;
 using ProcessHub.Services.Interfaces;
 using ProcessHub.Enums;
 using ProcessHub.Data;
+using ProcessHub.Exceptions;
 
 namespace ProcessHub.Services
 {
@@ -29,7 +30,7 @@ namespace ProcessHub.Services
             var client = await _clientRepository.GetByIdAsync(clientId);
 
             if (client == null)
-                throw new Exception("Client not found.");
+                throw new NotFoundException("Client not found.");
 
             // ----------------------------------------------------------------------------
 
@@ -49,7 +50,7 @@ namespace ProcessHub.Services
             var process = await _processRepository.GetByIdAsync(id);
 
             if (process == null)
-                throw new Exception("Process not found.");
+                throw new NotFoundException("Process not found.");
 
             process.Update(title, description);
 
@@ -63,7 +64,7 @@ namespace ProcessHub.Services
             var process = await _processRepository.GetByIdAsync(processId);
 
             if (process == null)
-                throw new Exception("Process not found.");
+                throw new NotFoundException("Process not found.");
 
             process.AssignUser(userId);
 
@@ -77,7 +78,7 @@ namespace ProcessHub.Services
             var process = await _processRepository.GetByIdAsync(processId);
 
             if (process == null)
-                throw new Exception("Process not found.");
+                throw new NotFoundException("Process not found.");
 
             process.ChangeStatus(newStatus, UserId);
 
@@ -131,7 +132,7 @@ namespace ProcessHub.Services
             var process = await _processRepository.GetByIdAsync(id);
 
             if (process == null)
-                throw new Exception("Process not found.");
+                throw new NotFoundException("Process not found.");
 
             process.Deactivate();
 

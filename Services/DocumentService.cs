@@ -2,6 +2,7 @@ using ProcessHub.Entities;
 using ProcessHub.Repositories.Interfaces;
 using ProcessHub.Services.Interfaces;
 using ProcessHub.Data;
+using ProcessHub.Exceptions;
 
 namespace ProcessHub.Services
 {
@@ -26,7 +27,7 @@ namespace ProcessHub.Services
             var process = await _processRepository.GetByIdAsync(processId);
 
             if (process == null)
-                throw new Exception("Process not found.");
+                throw new NotFoundException("Process not found.");
 
             var document = new Document(fileName, filePath, processId);
 
@@ -41,7 +42,7 @@ namespace ProcessHub.Services
             var document = await _documentRepository.GetByIdAsync(id);
 
             if (document == null)
-                throw new Exception("Document not found.");
+                throw new NotFoundException("Document not found.");
 
             return MapToDto(document);
         }
@@ -68,7 +69,7 @@ namespace ProcessHub.Services
             var document = await _documentRepository.GetByIdAsync(id);
 
             if (document == null)
-                throw new Exception("Document not found.");
+                throw new NotFoundException("Document not found.");
 
             document.Deactivate();
 

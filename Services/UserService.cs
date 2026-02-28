@@ -3,6 +3,7 @@ using ProcessHub.Enums;
 using ProcessHub.Repositories.Interfaces;
 using ProcessHub.Services.Interfaces;
 using ProcessHub.Data;
+using ProcessHub.Exceptions;
 
 namespace ProcessHub.Services
 {
@@ -34,7 +35,7 @@ namespace ProcessHub.Services
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
-                throw new Exception("User not found.");
+                throw new NotFoundException("User not found.");
 
             user.Update(name, email);
 
@@ -47,7 +48,7 @@ namespace ProcessHub.Services
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
-                throw new Exception("User not found.");
+                throw new NotFoundException("User not found.");
 
             user.ChangePassword(newPasswordHash);
 
@@ -60,7 +61,7 @@ namespace ProcessHub.Services
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
-                throw new Exception("User not found.");
+                throw new NotFoundException("User not found.");
 
             return MapToDto(user);
         }
@@ -86,7 +87,7 @@ namespace ProcessHub.Services
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
-                throw new Exception("User not found.");
+                throw new NotFoundException("User not found.");
 
             user.Deactivate();
 
