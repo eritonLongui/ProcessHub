@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ProcessHub.Services.Interfaces;
 using ProcessHub.Enums;
+using ProcessHub.DTOs.Process;
+using ProcessHub.DTOs.Common;
 
 namespace ProcessHub.Controllers
 {
@@ -42,6 +44,14 @@ namespace ProcessHub.Controllers
         public async Task<IActionResult> GetByClient(Guid clientId)
         {
             var result = await _processService.GetByClientIdAsync(clientId);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPaged([FromQuery] ProcessFilterDto filter)
+        {
+            var result = await _processService.GetPagedAsync(filter);
 
             return Ok(result);
         }

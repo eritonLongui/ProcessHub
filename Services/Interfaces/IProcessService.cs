@@ -1,4 +1,6 @@
 using ProcessHub.Enums;
+using ProcessHub.DTOs.Common;
+using ProcessHub.DTOs.Process;
 
 namespace ProcessHub.Services.Interfaces
 {
@@ -17,5 +19,7 @@ namespace ProcessHub.Services.Interfaces
         Task<IEnumerable<ProcessResponseDto>> GetByClientIdAsync(Guid clientId);
 
         Task DeactivateAsync(Guid id);
+
+        Task<PagedResult<ProcessResponseDto>> GetPagedAsync(ProcessFilterDto filter);
     }
 }

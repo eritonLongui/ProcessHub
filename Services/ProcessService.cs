@@ -4,6 +4,9 @@ using ProcessHub.Services.Interfaces;
 using ProcessHub.Enums;
 using ProcessHub.Data;
 using ProcessHub.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using ProcessHub.DTOs.Process;
+using ProcessHub.DTOs.Common;
 
 namespace ProcessHub.Services
 {
@@ -41,7 +44,7 @@ namespace ProcessHub.Services
 
             // carregar com include para retornar o cliente completo
             var createdProcess = await _processRepository.GetWithDetailsAsync(process.Id);
-            
+
             return MapToDto(createdProcess!);
         }
 
@@ -115,7 +118,7 @@ namespace ProcessHub.Services
         public async Task<IEnumerable<ProcessResponseDto>> GetByClientIdAsync(Guid clientId)
         {
             var processes = await _processRepository.GetByClientIdAsync(clientId);
-            
+
             var result = new List<ProcessResponseDto>();
 
             foreach (var process in processes)
@@ -139,6 +142,40 @@ namespace ProcessHub.Services
             _processRepository.Update(process);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<ProcessResponseDto>> GetPagedAsync(ProcessFilterDto filter)
+        {
+            var query = _context.Processes.AsQueryable();
+
+            // 🔹 Filtros
+            if (!string.IsNullOrEmpty(filter.Title))
+                query = query.Where(p => p.Title.Contains(filter.Title));
+
+            if (filter.Status.HasValue)
+                query = query.Where(p => p.Status == filter.Status.Value);
+
+            if (filter.ClientId.HasValue)
+                query = query.Where(p => p.ClientId == filter.ClientId.Value);
+
+            // 🔹 Total antes da paginação
+            var totalCount = await query.CountAsync();
+
+            // 🔹 Paginação
+            var processes = await query
+                .Include(p => p.Client)
+                .Skip((filter.Page - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+            // 🔹 Mapping
+            var data = processes.Select(MapToDto);
+
+            return new PagedResult<ProcessResponseDto>
+            {
+                Data = data,
+                TotalCount = totalCount
+            };
         }
     }
 }
