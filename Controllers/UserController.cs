@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using ProcessHub.Services.Interfaces;
-using ProcessHub.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProcessHub.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase

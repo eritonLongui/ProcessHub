@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using ProcessHub.Services.Interfaces;
 using ProcessHub.Enums;
 using ProcessHub.DTOs.Process;
-using ProcessHub.DTOs.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProcessHub.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProcessController : ControllerBase
@@ -80,6 +81,7 @@ namespace ProcessHub.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Deactivate(Guid id)
         {
