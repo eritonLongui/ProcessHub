@@ -20,8 +20,10 @@ namespace ProcessHub.Services
             _context = context;
         }
 
-        public async Task<UserResponseDto> CreateAsync(string name, string email, string passwordHash, UserRole role)
+        public async Task<UserResponseDto> CreateAsync(string name, string email, string password, UserRole role)
         {
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+
             var user = new User(name, email, passwordHash, role);
 
             await _userRepository.AddAsync(user);
@@ -43,14 +45,16 @@ namespace ProcessHub.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task ChangePasswordAsync(Guid id, string newPasswordHash)
+        public async Task ChangePasswordAsync(Guid id, string newPassword)
         {
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
                 throw new NotFoundException("User not found.");
 
-            user.ChangePassword(newPasswordHash);
+            var newHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            user.ChangePassword(newHash);
 
             _userRepository.Update(user);
             await _context.SaveChangesAsync();
